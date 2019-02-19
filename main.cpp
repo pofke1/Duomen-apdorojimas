@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <algorithm>
 #include <time.h>
+#include <fstream>
 using namespace std;
 
 double random(int min, int max)
@@ -12,9 +13,8 @@ double random(int min, int max)
     return rand()%(max+1-min)+min;
 }
 
-class studentas
+struct studentas
 {
-public:
     string vard, pavard;
     double vidNd, egz, galutinis;
     vector <double> nd;
@@ -47,32 +47,95 @@ studentas::calc ()
     }
 
 }
+void sortf(vector <studentas> &studentai)
+{
+    int sizev = studentai.size();
+    vector <string> vardai (sizev);
+    vector <studentas> studentai2(sizev);
+    for(int x = 0; x < sizev; ++x)
+    {
+        vardai[x] = studentai[x].pavard;
+        studentai2[x] = studentai[x];
+    }
+    sort(vardai.begin(), vardai.end());
+    bool notdone = true;
+
+    for(int x = 0; x < sizev; ++x)
+    {
+        for(int y = 0; notdone == true; ++y)
+        {
+            if(vardai[x]== studentai2[y].pavard)
+            {
+                studentai[x] = studentai2[y];
+                notdone = false;
+            }
+        }
+        notdone = true;
+    }
+}
 void print(vector <studentas> studentai)
 {
     string temp;
     int vecsize;
-    cout << "jei norite, kad spausdintu medianas rasykite m, jei vidurkius v: ";
-    cin >> temp;
-    if(temp == "v")
-    {
-    cout << "Pavarde\t\tVardas\t\tGalutinis (Vid.)" << endl << "--------------------------------------------------" << endl;
+    cout << "Pavarde\t\tVardas\t\tGalutinis (Vid.)\tGalutinis (Med.)" << endl << "-----------------------------------------------------------------------" << endl;
     vecsize = studentai.size();
     for(int x = 0; x < vecsize; ++x)
     {
         cout << studentai[x].pavard << "\t\t"<<studentai[x].vard << "\t\t";
         cout.precision(3);
         cout.fixed;
-        cout << studentai[x].galutinis << endl;
+        cout << studentai[x].galutinis <<"\t\t";
+        cout.precision(3);
+        cout.fixed;
+        cout << studentai[x].mediana << endl;
     }
-    }
-    else
+
+
+
+}
+void addfromfile(vector <studentas> &studentai)
+{
+    ifstream file;
+    file.open("kursiokai.txt");
+    if(!file)
     {
-            cout << "Pavarde\t\tVardas\t\tGalutinis (Med.)" << endl << "--------------------------------------------------" << endl;
-    vecsize = studentai.size();
-    for(int x = 0; x < vecsize; ++x)
-    {
-        cout << studentai[x].pavard << "\t\t"<<studentai[x].vard << "\t\t"<<studentai[x].mediana << endl;
+        cout << "failas neatidarytas, nuskaitymas nepavyko" << endl;
     }
+    string temp;
+    double tempd;
+    file >> temp;
+    int x = 0;
+        while(temp != "Egzaminas")
+        {
+            file >> temp;
+        }
+    while(temp != "")
+    {
+        if(temp == "Egzaminas")
+        {
+        file >> temp;
+        }
+
+        studentai[x].pavard = temp;
+        file >> temp;
+        studentai[x].vard = temp;
+        file >> tempd;
+        studentai[x].nd.push_back(tempd);
+        file >> tempd;
+        studentai[x].nd.push_back(tempd);
+        file >> tempd;
+        studentai[x].nd.push_back(tempd);
+        file >> tempd;
+        studentai[x].nd.push_back(tempd);
+        file >> tempd;
+        studentai[x].nd.push_back(tempd);
+        file >> tempd;
+        studentai[x].egz = tempd;
+        ++x;
+        temp = "";
+        file >> temp;
+        studentai.push_back(studentai[0]);
+
     }
 
 }
@@ -130,13 +193,23 @@ studentai.push_back(studentai[0]);
 int main()
 {
 srand(time(NULL));
-
+string temp;
     vector <studentas> studentai (1);
-    add(studentai);
+    cout << "Iveskite f kad nuskaityti is failo, r, kad ivesti ranka: ";
+    cin >> temp;
+    if(temp == "f")
+    {
+        addfromfile(studentai);
+    }
+    else
+    {
+        add(studentai);
+    }
     for(int x = 0; x < studentai.size(); ++x)
     {
         studentai[x].calc();
     }
+    sortf(studentai);
     print (studentai);
     system("PAUSE");
     return 0;
