@@ -17,8 +17,7 @@ class studentas
 public:
     string vard, pavard;
     double vidNd, egz, galutinis;
-    double nd [100];
-    int ndsize;
+    vector <double> nd;
     int calc();
     double mediana;
 };
@@ -26,17 +25,17 @@ studentas::calc ()
 {
     //cout << "start"<<endl;
     double suma = 0;
-    int vecsize = ndsize;
+    int vecsize = nd.size();
     for(int x = 0; x < vecsize; ++x)
     {
         suma = suma + nd[x];
     }
     vidNd = suma/vecsize;
     galutinis = vidNd*0.4+0.6*egz;
-    sort(nd, nd+ndsize-1);
+    sort(nd.begin(), nd.end());
     int temp = 0;
-    temp = ndsize/2;
-    if(temp == ndsize)
+    temp = nd.size()/2;
+    if(temp == nd.size())
     {
         mediana = (nd[temp-1]+nd[temp])/2;
         mediana = 0.4*mediana + 0.6*egz;
@@ -102,15 +101,13 @@ while(temp != "done")
         int y = random(1, 10);
         for(int xx = 0; xx < y; ++xx)
         {
-            studentai[x].nd[xx]=random(1, 10);
-            studentai[x].ndsize++;
+            studentai[x].nd.push_back(random(1, 10));
         }
         temp  = "done";
     }
     else
     {
-        studentai[x].nd[studentai[x].ndsize]=stod(temp);
-        studentai[x].ndsize++;
+        studentai[x].nd.push_back(stod(temp));
     }
 }
 cout << "iveskite egzamino pazymi: ";
