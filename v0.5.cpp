@@ -10,6 +10,75 @@
 #include <windows.h>
 #include <fstream>
 using namespace std;
+string input(string textToOutput, string option1, string option2)
+{
+string temp;
+cout << textToOutput;
+cin >> temp;
+while((temp != option1) && temp !=option2)
+{
+cout << textToOutput;
+cin >> temp;
+}
+return temp;
+}
+string input(string textToOutput, vector <string> options)
+{
+string temp;
+cout << textToOutput;
+cin >> temp;
+int vecsize = options.size();
+
+while(1)
+{
+for(int x = 0; x < vecsize; ++x)
+{
+    if(temp == options[x])
+    {
+        return temp;
+    }
+}
+cout << textToOutput;
+cin >> temp;
+}
+}
+float input(string textToOutput)
+{
+    float temp;
+    cout << textToOutput;
+    while(!(cin >> temp))
+    {
+        cin.clear();
+        cin.ignore(INT_MAX,'\n');
+        cout << textToOutput;
+    }
+    return temp;
+}
+float input(string textToOutput, int minvalue)
+{
+    float temp;
+    cout << textToOutput;
+    while(!(cin >> temp)||temp < minvalue)
+    {
+        cin.clear();
+        cin.ignore(INT_MAX,'\n');
+        cout << textToOutput;
+    }
+    return temp;
+}
+float input(string textToOutput, int minvalue, int maxvalue)
+{
+    float temp;
+    cout << textToOutput;
+    while(!(cin >> temp)||temp < minvalue || temp > maxvalue)
+    {
+        cin.clear();
+        cin.ignore(INT_MAX,'\n');
+        cout << textToOutput;
+    }
+    return temp;
+}
+
     double timee = 0;
     bool counting = false;
     clock_t start = clock();
@@ -605,26 +674,14 @@ int studsk = 10;
 
 srand(time(NULL));
 string temp;
-int tempint;
+int tempint1, tempint2;
 vector<studentas> studentai (1);
 deque <studentas> studentaideq (1);
 vector <studentas> studentaivec (1);
 list <studentas> studentaili (1);
-
-    cout << "Iveskite f kad nuskaityti is failo, r, kad ivesti ranka: ";
-    cin >> temp;
-    if(temp == "f")
-    {
-        cout <<"Ar norite sugeneruoti faila? Irasykite t arba n" << endl;
-        cin >> temp;
-        if(temp == "n")
-        {
-            ifstream stud;
-            stud.open("kursiokai.txt");
-        addfromfile(studentai, stud);
-        }
-        else
-        {
+tempint1 = input("nuo kiek studentu pradet skaiciuoti? ", 1);
+tempint2 = input("kiek kartu daugint ta skaiciu? ", 0) +1;
+studsk = tempint1;
             for(int xx = 0;xx<3;++xx)
             {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), xx+1);
@@ -632,7 +689,7 @@ list <studentas> studentaili (1);
             if(xx == 0)
             {
                 cout << "----VEKTORIUS----"<<endl;
-                for(int x = 0; x < 5; ++x)
+                for(int x = 0; x < tempint2; ++x)
                 {
                 playPause();
                 generatefile(studsk, "kursiokai.txt");
@@ -668,10 +725,10 @@ list <studentas> studentaili (1);
             }
             else if(xx == 1)
             {
-                studsk = 10;
+                studsk = tempint1;
                 cout << "----DEQUE----"<<endl;
 
-                for(int x = 0; x < 5; ++x)
+                for(int x = 0; x < tempint2; ++x)
                 {
                 playPause();
                 generatefile(studsk, "kursiokai.txt");
@@ -709,10 +766,10 @@ list <studentas> studentaili (1);
             else
             {
 
-                studsk = 10;
+                studsk = tempint1;
                 cout << "----LISTAS----"<<endl;
 
-                for(int x = 0; x < 5; ++x)
+                for(int x = 0; x < tempint2; ++x)
                 {
                 playPause();
                 generatefile(studsk, "kursiokai.txt");
@@ -749,19 +806,12 @@ list <studentas> studentaili (1);
             }
 
         }
-        }
-    }
-    else
-    {
-        add(studentai);
-    }
+
+
     /*for(int x = 0; x < studentai.size(); ++x)
     {
         studentai[x].calc();
     }*/
-    sortf(studentaivec);
-    print (studentaivec);
-    filtertofile(studentaivec);
     system("PAUSE");
     return 0;
 }
